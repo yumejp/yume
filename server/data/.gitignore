@@ -1,0 +1,8 @@
+# Dictionary source files are big (~10MB compressed, ~70MB uncompressed).
+# Don't commit them — fetch at build/install time via `go run ./cmd/fetch-dict`.
+JMdict_e.gz
+JMdict.gz
+JMnedict.xml.gz
+*.xml
+examples.utf.gz
+ja_gsd-ud-*.conllu

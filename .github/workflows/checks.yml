@@ -1,0 +1,250 @@
+name: Checks
+on:
+  push:
+    branches: [main]
+    tags: ['v*']
+  pull_request:
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: checks-${{ github.workflow }}-${{ github.ref }}
+  # A newer push to a pull request replaces its run; main and tag runs finish.
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+jobs:
+  server:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7.0.0
+        with:
+          go-version-file: server/go.mod
+          cache-dependency-path: server/go.sum
+      - run: go test ./...
+        working-directory: server
+      - run: go vet ./...
+        working-directory: server
+      - run: go run golang.org/x/vuln/cmd/govulncheck@v1.7.0 ./...
+        working-directory: server
+  mobile:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: mobile/package-lock.json
+      - run: npm ci
+        working-directory: mobile
+      - run: npm run check
+        working-directory: mobile
+      # The notices list the server's Go modules too, so this job needs Go.
+      - uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7.0.0
+        with:
+          go-version-file: server/go.mod
+          cache-dependency-path: server/go.sum
+      - name: Third-party notices are current and every license is allowed
+        run: node scripts/third-party-notices.mjs --check
+      - run: npx playwright install --with-deps chromium
+        working-directory: mobile
+      - run: npm run test:journey
+        working-directory: mobile
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        if: always()
+        with:
+          name: browser-screenshots
+          path: mobile/e2e/artifacts/
+          if-no-files-found: ignore
+  docker:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: Build the image the tests below run
+        shell: bash
+        run: |
+          set -euo pipefail
+          docker build --tag yume-ci \
+            --build-arg VERSION="sha-${GITHUB_SHA::12}" \
+            --build-arg COMMIT=$GITHUB_SHA \
+            --label "org.opencontainers.image.source=https://github.com/$GITHUB_REPOSITORY" \
+            --label "org.opencontainers.image.revision=$GITHUB_SHA" \
+            .
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: mobile/package-lock.json
+      - run: node scripts/docker-smoke.mjs
+      # The fixture journey above proves the app; this proves the app the
+      # image serves works against the server inside it.
+      - run: npm ci && npx playwright install --with-deps chromium
+        working-directory: mobile
+      - name: Browser journey against the image
+        working-directory: mobile
+        shell: bash
+        run: |
+          set -euo pipefail
+          # The container binds 0.0.0.0, so open mode needs the opt-in compose gives it.
+          docker run -d --name yume-journey -p 127.0.0.1:17654:7654 -e YUME_ALLOW_OPEN_NETWORK=1 yume-ci
+          trap 'docker rm -f yume-journey >/dev/null 2>&1 || true' EXIT
+          for _ in $(seq 180); do
+            curl -fsS http://127.0.0.1:17654/health >/dev/null 2>&1 && break
+            sleep 1
+          done
+          YUME_BASE=http://127.0.0.1:17654 node e2e/first-word.mjs
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        if: always()
+        with:
+          name: image-browser-screenshots
+          path: mobile/e2e/artifacts/
+          if-no-files-found: ignore
+      # Hand the image that just passed to the publish job, so what gets
+      # pushed is byte for byte what was tested.
+      - name: Save the tested image
+        if: github.ref == 'refs/heads/main' && (github.event_name == 'push' || github.event_name == 'workflow_dispatch')
+        run: docker save yume-ci | gzip > "$RUNNER_TEMP/yume-ci.tar.gz"
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        if: github.ref == 'refs/heads/main' && (github.event_name == 'push' || github.event_name == 'workflow_dispatch')
+        with:
+          name: tested-image
+          path: ${{ runner.temp }}/yume-ci.tar.gz
+          retention-days: 1
+          if-no-files-found: error
+  # Every tested main commit, as sha-<commit>. Only main publishes: a
+  # dispatched run on another branch tests but never pushes an image.
+  publish:
+    needs: [server, mobile, docker]
+    if: github.ref == 'refs/heads/main' && (github.event_name == 'push' || github.event_name == 'workflow_dispatch')
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
+        with:
+          name: tested-image
+          path: ${{ runner.temp }}
+      - name: Push the tested image as sha-<commit>
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          image="ghcr.io/${GITHUB_REPOSITORY,,}:sha-$GITHUB_SHA"
+          gunzip -c "$RUNNER_TEMP/yume-ci.tar.gz" | docker load
+          docker tag yume-ci "$image"
+          printf '%s' "$GH_TOKEN" | docker login ghcr.io -u "$GITHUB_ACTOR" --password-stdin
+          docker push "$image"
+          printf 'Published `%s`\n' "$image" >> "$GITHUB_STEP_SUMMARY"
+      - name: Log out of ghcr.io
+        if: always()
+        run: docker logout ghcr.io || true
+  # A pushed v* tag on a main commit: the same checks, then a linux/amd64 +
+  # linux/arm64 image tagged with the version, and a draft GitHub release for
+  # the owner to finish and publish. See docs/releasing.md.
+  release:
+    needs: [server, mobile, docker]
+    if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/v')
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    permissions:
+      contents: write
+      packages: write
+      id-token: write
+      attestations: write
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+      - name: Check the tag
+        id: tag
+        shell: bash
+        run: |
+          set -euo pipefail
+          version=${GITHUB_REF_NAME#v}
+          [[ $version =~ ^[0-9]+\.[0-9]+\.[0-9]+(-[0-9A-Za-z.-]+)?$ ]] || { echo "::error::$GITHUB_REF_NAME is not vMAJOR.MINOR.PATCH[-PRERELEASE]"; exit 1; }
+          git merge-base --is-ancestor "$GITHUB_SHA" origin/main || { echo "::error::$GITHUB_REF_NAME is not on main"; exit 1; }
+          image="ghcr.io/${GITHUB_REPOSITORY,,}"
+          tags=("$image:$GITHUB_REF_NAME")
+          if [[ $version == *-* ]]; then
+            pre=${version#*-}
+            tags+=("$image:${pre%%.*}")        # moving channel tag, e.g. :alpha
+          else
+            minor=${version%.*}
+            tags+=("$image:v$minor" "$image:latest")
+          fi
+          {
+            echo "version=$version"
+            echo "image=$image"
+            echo "tags=${tags[*]}"
+            [[ $version == *-* ]] && echo "prerelease=true" || echo "prerelease=false"
+          } >> "$GITHUB_OUTPUT"
+      - uses: docker/setup-qemu-action@99012661954931238ded8c8b007157a8430204e1 # v4.4.0
+        with:
+          platforms: arm64
+      - uses: docker/setup-buildx-action@f87e5991a6d7451dcb8d9637bfbc97413f497069 # v4.4.1
+      - name: Build and push linux/amd64 and linux/arm64
+        id: push
+        env:
+          GH_TOKEN: ${{ github.token }}
+          IMAGE: ${{ steps.tag.outputs.image }}
+          TAGS: ${{ steps.tag.outputs.tags }}
+          VERSION: ${{ steps.tag.outputs.version }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          printf '%s' "$GH_TOKEN" | docker login ghcr.io -u "$GITHUB_ACTOR" --password-stdin
+          tag_args=()
+          for t in $TAGS; do tag_args+=(--tag "$t"); done
+          docker buildx build --platform linux/amd64,linux/arm64 --provenance=false \
+            --build-arg VERSION="$GITHUB_REF_NAME" --build-arg COMMIT="$GITHUB_SHA" \
+            --label "org.opencontainers.image.source=https://github.com/$GITHUB_REPOSITORY" \
+            --label "org.opencontainers.image.revision=$GITHUB_SHA" \
+            --label "org.opencontainers.image.version=$VERSION" \
+            "${tag_args[@]}" --metadata-file /tmp/build.json --push .
+          digest=$(jq -r '."containerimage.digest"' /tmp/build.json)
+          [[ $digest =~ ^sha256:[a-f0-9]{64}$ ]]
+          for platform in linux/amd64 linux/arm64; do
+            got=$(docker run --rm --platform "$platform" --entrypoint yume-server "$IMAGE@$digest" -version)
+            [[ $got == "$VERSION $GITHUB_SHA" ]] || { echo "::error::$platform reports '$got'"; exit 1; }
+          done
+          echo "digest=$digest" >> "$GITHUB_OUTPUT"
+      # Provenance needs a public repository (or Enterprise Cloud); it starts
+      # with the first release after the flip. Pushing the attestation reads
+      # the ghcr.io login from the Docker config, so the push step keeps it
+      # and the last step logs out.
+      - uses: actions/attest-build-provenance@4d101475d8b20a2381f78447822ac1eab6504dd8 # v4.2.2
+        if: ${{ !github.event.repository.private }}
+        with:
+          subject-name: ${{ steps.tag.outputs.image }}
+          subject-digest: ${{ steps.push.outputs.digest }}
+          push-to-registry: true
+      - name: Draft the GitHub release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          IMAGE: ${{ steps.tag.outputs.image }}
+          TAGS: ${{ steps.tag.outputs.tags }}
+          DIGEST: ${{ steps.push.outputs.digest }}
+          PRERELEASE: ${{ steps.tag.outputs.prerelease }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          {
+            printf '## Install\n\n'
+            printf 'From source: `git fetch --tags && git checkout %s`, then follow the README.\n\n' "$GITHUB_REF_NAME"
+            printf 'Image (linux/amd64, linux/arm64): `%s@%s`\n\n' "$IMAGE" "$DIGEST"
+            printf 'Tags: `%s`\n\n' "$TAGS"
+            printf '## Tested platforms\n\nTODO before publishing: which platforms and browsers were tested.\n\n'
+            printf '## Known limitations\n\nTODO before publishing: self-hosted setup, the external tutor connection, anything else learners should know.\n\n'
+            printf '## Upgrading\n\nBack up first (README, "Back up and update"). TODO: schema or data changes in this release.\n\n'
+          } > /tmp/notes.md
+          flags=(--draft --verify-tag --generate-notes --title "Yume $GITHUB_REF_NAME" --notes-file /tmp/notes.md)
+          [[ $PRERELEASE == true ]] && flags+=(--prerelease)
+          gh release create "$GITHUB_REF_NAME" "${flags[@]}"
+          printf '### Release drafted\n\nImage: `%s@%s`\n\nFinish the notes and publish the draft release.\n' "$IMAGE" "$DIGEST" >> "$GITHUB_STEP_SUMMARY"
+      - name: Log out of ghcr.io
+        if: always()
+        run: docker logout ghcr.io || true

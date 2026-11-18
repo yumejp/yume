@@ -1,0 +1,1017 @@
+{
+  "Tables": {
+    "card_media": [
+      {
+        "Name": "id",
+        "Type": "INTEGER",
+        "Default": "",
+        "NotNull": false,
+        "PK": true
+      },
+      {
+        "Name": "card_id",
+        "Type": "INTEGER",
+        "Default": "",
+        "NotNull": true,
+        "PK": false
+      },
+      {
+        "Name": "kind",
+        "Type": "TEXT",
+        "Default": "'audio'",
+        "NotNull": true,
+        "PK": false
+      },
+      {
+        "Name": "label",
+        "Type": "TEXT",
+        "Default": "",
+        "NotNull": false,
+        "PK": false
+      },
+      {
+        "Name": "source",
+        "Type": "TEXT",
+        "Default": "",
+        "NotNull": false,
+        "PK": false
+      },
+      {
+        "Name": "file",
+        "Type": "TEXT",
+        "Default": "",
+        "NotNull": true,
+        "PK": false
+      },
+      {
+        "Name": "is_primary",
+        "Type": "INTEGER",
+        "Default": "0",
+        "NotNull": true,
+        "PK": false
+      },
+      {
+        "Name": "created_at",
+        "Type": "INTEGER",
+        "Default": "",
+        "NotNull": true,
+        "PK": false
+      },
+      {
+        "Name": "voice",
+        "Type": "TEXT",
+        "Default": "",
+        "NotNull": false,
+        "PK": false
+      },
+      {
+        "Name": "updated_at",
+        "Type": "INTEGER",
+        "Default": "",
+        "NotNull": false,
+        "PK": false
+      }
+    ],
+    "card_notes": [
+      {
+        "Name": "id",
+        "Type": "INTEGER",
+        "Default": "",
+        "NotNull": false,
+        "PK": true
+      },
+      {
+        "Name": "card_id",
+        "Type": "INTEGER",
+        "Default": "",
+        "NotNull": true,
+        "PK": false
+      },
+      {
+        "Name": "kind",
+        "Type": "TEXT",
+        "Default": "",
+        "NotNull": true,
+        "PK": false
+      },
+      {
+        "Name": "note",
+        "Type": "TEXT",
+        "Default": "",
+        "NotNull": true,
+        "PK": false
+      },
+      {
+        "Name": "created_at",
+        "Type": "INTEGER",
+        "Default": "CAST(strftime('%s','now') AS INTEGER)",
+        "NotNull": true,
+        "PK": false
+      },
+      {
+        "Name": "updated_at",
+        "Type": "INTEGER",
+        "Default": "CAST(strftime('%s','now') AS INTEGER)",
+        "NotNull": true,
+        "PK": false
+      },
+      {
+        "Name": "translation",
+        "Type": "TEXT",
+        "Default": "''",
+        "NotNull": true,
+        "PK": false
+      }
+    ],
+    "cards": [
+      {
+        "Name": "id",
+        "Type": "INTEGER",
+        "Default": "",
+        "NotNull": false,
+        "PK": true
+      },
+      {
+        "Name": "jmdict_id",
+        "Type": "INTEGER",
+        "Default": "",
+        "NotNull": false,
+        "PK": false
+      },
+      {
+        "Name": "lemma",
+        "Type": "TEXT",
+        "Default": "",
+        "NotNull": true,
+        "PK": false
+      },
+      {
+        "Name": "kanji",
+        "Type": "TEXT",
+        "Default": "",
+        "NotNull": false,
+        "PK": false
+      },
+      {
+        "Name": "readings",
+        "Type": "TEXT",
+        "Default": "",
+        "NotNull": false,
+        "PK": false
+      },
+      {
+        "Name": "glosses",
+        "Type": "TEXT",
+        "Default": "",
+        "NotNull": false,
+        "PK": false
+      },
+      {
+        "Name": "sentence",
+        "Type": "TEXT",
+        "Default": "",
+        "NotNull": false,
+        "PK": false
+      },
+      {
+        "Name": "source_url",
+        "Type": "TEXT",
+        "Default": "",
+        "NotNull": false,
+        "PK": false
+      },
+      {
+        "Name": "created_at",
+        "Type": "INTEGER",
+        "Default": "",
+        "NotNull": true,
+        "PK": false
+      },
+      {
+        "Name": "due",
+        "Type": "INTEGER",
+        "Default": "",
+        "NotNull": true,
+        "PK": false
+      },
+      {
+        "Name": "stability",
+        "Type": "REAL",
+        "Default": "",
+        "NotNull": true,
+        "PK": false
+      },
+      {
+        "Name": "difficulty",
+        "Type": "REAL",
+        "Default": "",
+        "NotNull": true,
+        "PK": false
+      },
+      {
+        "Name": "elapsed_days",
+        "Type": "REAL",
+        "Default": "0",
+        "NotNull": true,
+        "PK": false
+      },
+      {
+        "Name": "scheduled_days",
+        "Type": "REAL",
+        "Default": "0",
+        "NotNull": true,
+        "PK": false
+      },
+      {
+        "Name": "reps",
+        "Type": "INTEGER",
+        "Default": "0",
+        "NotNull": true,
+        "PK": false
+      },
+      {
+        "Name": "lapses",
+        "Type": "INTEGER",
+        "Default": "0",
+        "NotNull": true,
+        "PK": false
+      },
+      {
+        "Name": "state",
+        "Type": "INTEGER",
+        "Default": "0",
+        "NotNull": true,
+        "PK": false
+      },
+      {
+        "Name": "last_review",
+        "Type": "INTEGER",
+        "Default": "",
+        "NotNull": false,
+        "PK": false
+      },
+      {
+        "Name": "card_type",
+        "Type": "TEXT",
+        "Default": "'vocab'",
+        "NotNull": true,
+        "PK": false
+      },
+      {
+        "Name": "surface",
+        "Type": "TEXT",
+        "Default": "",
+        "NotNull": false,
+        "PK": false
+      },
+      {
+        "Name": "audio_file",
+        "Type": "TEXT",
+        "Default": "",
+        "NotNull": false,
+        "PK": false
+      },
+      {
+        "Name": "image_file",
+        "Type": "TEXT",
+        "Default": "",
+        "NotNull": false,
+        "PK": false
+      },
+      {
+        "Name": "audio_source",
+        "Type": "TEXT",
+        "Default": "",
+        "NotNull": false,
+        "PK": false
+      },
+      {
+        "Name": "translation",
+        "Type": "TEXT",
+        "Default": "",
+        "NotNull": false,
+        "PK": false
+      },
+      {
+        "Name": "explanation",
+        "Type": "TEXT",
+        "Default": "",
+        "NotNull": false,
+        "PK": false
+      },
+      {
+        "Name": "updated_at",
+        "Type": "INTEGER",
+        "Default": "",
+        "NotNull": false,
+        "PK": false
+      },
+      {
+        "Name": "lang",
+        "Type": "TEXT",
+        "Default": "'ja'",
+        "NotNull": true,
+        "PK": false
+      },
+      {
+        "Name": "mnemonic_parts",
+        "Type": "TEXT",
+        "Default": "",
+        "NotNull": false,
+        "PK": false
+      },
+      {
+        "Name": "mnemonic_story",
+        "Type": "TEXT",
+        "Default": "",
+        "NotNull": false,
+        "PK": false
+      }
+    ],
+    "dict_entries": [
+      {
+        "Name": "id",
+        "Type": "INTEGER",
+        "Default": "",
+        "NotNull": false,
+        "PK": true
+      },
+      {
+        "Name": "dict_id",
+        "Type": "INTEGER",
+        "Default": "",
+        "NotNull": true,
+        "PK": false
+      },
+      {
+        "Name": "term",
+        "Type": "TEXT",
+        "Default": "",
+        "NotNull": true,
+        "PK": false
+      },
+      {
+        "Name": "reading",
+        "Type": "TEXT",
+        "Default": "",
+        "NotNull": false,
+        "PK": false
+      },
+      {
+        "Name": "definitions_json",
+        "Type": "TEXT",
+        "Default": "",
+        "NotNull": true,
+        "PK": false
+      },
+      {
+        "Name": "popularity",
+        "Type": "REAL",
+        "Default": "0",
+        "NotNull": true,
+        "PK": false
+      },
+      {
+        "Name": "created_at",
+        "Type": "INTEGER",
+        "Default": "",
+        "NotNull": false,
+        "PK": false
+      },
+      {
+        "Name": "updated_at",
+        "Type": "INTEGER",
+        "Default": "",
+        "NotNull": false,
+        "PK": false
+      }
+    ],
+    "dicts": [
+      {
+        "Name": "id",
+        "Type": "INTEGER",
+        "Default": "",
+        "NotNull": false,
+        "PK": true
+      },
+      {
+        "Name": "name",
+        "Type": "TEXT",
+        "Default": "",
+        "NotNull": true,
+        "PK": false
+      },
+      {
+        "Name": "revision",
+        "Type": "TEXT",
+        "Default": "",
+        "NotNull": false,
+        "PK": false
+      },
+      {
+        "Name": "author",
+        "Type": "TEXT",
+        "Default": "",
+        "NotNull": false,
+        "PK": false
+      },
+      {
+        "Name": "url",
+        "Type": "TEXT",
+        "Default": "",
+        "NotNull": false,
+        "PK": false
+      },
+      {
+        "Name": "description",
+        "Type": "TEXT",
+        "Default": "",
+        "NotNull": false,
+        "PK": false
+      },
+      {
+        "Name": "enabled",
+        "Type": "INTEGER",
+        "Default": "1",
+        "NotNull": true,
+        "PK": false
+      },
+      {
+        "Name": "imported_at",
+        "Type": "INTEGER",
+        "Default": "",
+        "NotNull": true,
+        "PK": false
+      },
+      {
+        "Name": "created_at",
+        "Type": "INTEGER",
+        "Default": "",
+        "NotNull": false,
+        "PK": false
+      },
+      {
+        "Name": "updated_at",
+        "Type": "INTEGER",
+        "Default": "",
+        "NotNull": false,
+        "PK": false
+      },
+      {
+        "Name": "lang",
+        "Type": "TEXT",
+        "Default": "'ja'",
+        "NotNull": true,
+        "PK": false
+      },
+      {
+        "Name": "gloss_lang",
+        "Type": "TEXT",
+        "Default": "'en'",
+        "NotNull": true,
+        "PK": false
+      }
+    ],
+    "frequencies": [
+      {
+        "Name": "id",
+        "Type": "INTEGER",
+        "Default": "",
+        "NotNull": false,
+        "PK": true
+      },
+      {
+        "Name": "dict_id",
+        "Type": "INTEGER",
+        "Default": "",
+        "NotNull": true,
+        "PK": false
+      },
+      {
+        "Name": "expression",
+        "Type": "TEXT",
+        "Default": "",
+        "NotNull": true,
+        "PK": false
+      },
+      {
+        "Name": "reading",
+        "Type": "TEXT",
+        "Default": "",
+        "NotNull": false,
+        "PK": false
+      },
+      {
+        "Name": "value",
+        "Type": "INTEGER",
+        "Default": "",
+        "NotNull": true,
+        "PK": false
+      },
+      {
+        "Name": "display",
+        "Type": "TEXT",
+        "Default": "",
+        "NotNull": false,
+        "PK": false
+      },
+      {
+        "Name": "created_at",
+        "Type": "INTEGER",
+        "Default": "",
+        "NotNull": false,
+        "PK": false
+      },
+      {
+        "Name": "updated_at",
+        "Type": "INTEGER",
+        "Default": "",
+        "NotNull": false,
+        "PK": false
+      }
+    ],
+    "kanji_notes": [
+      {
+        "Name": "lang",
+        "Type": "TEXT",
+        "Default": "'ja'",
+        "NotNull": true,
+        "PK": true
+      },
+      {
+        "Name": "kanji",
+        "Type": "TEXT",
+        "Default": "",
+        "NotNull": true,
+        "PK": true
+      },
+      {
+        "Name": "note",
+        "Type": "TEXT",
+        "Default": "",
+        "NotNull": true,
+        "PK": false
+      },
+      {
+        "Name": "updated_at",
+        "Type": "INTEGER",
+        "Default": "",
+        "NotNull": true,
+        "PK": false
+      },
+      {
+        "Name": "created_at",
+        "Type": "INTEGER",
+        "Default": "",
+        "NotNull": false,
+        "PK": false
+      }
+    ],
+    "pitches": [
+      {
+        "Name": "id",
+        "Type": "INTEGER",
+        "Default": "",
+        "NotNull": false,
+        "PK": true
+      },
+      {
+        "Name": "dict_id",
+        "Type": "INTEGER",
+        "Default": "",
+        "NotNull": true,
+        "PK": false
+      },
+      {
+        "Name": "expression",
+        "Type": "TEXT",
+        "Default": "",
+        "NotNull": true,
+        "PK": false
+      },
+      {
+        "Name": "reading",
+        "Type": "TEXT",
+        "Default": "",
+        "NotNull": false,
+        "PK": false
+      },
+      {
+        "Name": "position",
+        "Type": "INTEGER",
+        "Default": "",
+        "NotNull": true,
+        "PK": false
+      },
+      {
+        "Name": "created_at",
+        "Type": "INTEGER",
+        "Default": "",
+        "NotNull": false,
+        "PK": false
+      },
+      {
+        "Name": "updated_at",
+        "Type": "INTEGER",
+        "Default": "",
+        "NotNull": false,
+        "PK": false
+      }
+    ],
+    "review_log": [
+      {
+        "Name": "id",
+        "Type": "INTEGER",
+        "Default": "",
+        "NotNull": false,
+        "PK": true
+      },
+      {
+        "Name": "card_id",
+        "Type": "INTEGER",
+        "Default": "",
+        "NotNull": true,
+        "PK": false
+      },
+      {
+        "Name": "rating",
+        "Type": "INTEGER",
+        "Default": "",
+        "NotNull": true,
+        "PK": false
+      },
+      {
+        "Name": "reviewed_at",
+        "Type": "INTEGER",
+        "Default": "",
+        "NotNull": true,
+        "PK": false
+      },
+      {
+        "Name": "review_id",
+        "Type": "TEXT",
+        "Default": "",
+        "NotNull": false,
+        "PK": false
+      },
+      {
+        "Name": "prev_due",
+        "Type": "INTEGER",
+        "Default": "",
+        "NotNull": false,
+        "PK": false
+      },
+      {
+        "Name": "prev_stability",
+        "Type": "REAL",
+        "Default": "",
+        "NotNull": false,
+        "PK": false
+      },
+      {
+        "Name": "prev_difficulty",
+        "Type": "REAL",
+        "Default": "",
+        "NotNull": false,
+        "PK": false
+      },
+      {
+        "Name": "prev_elapsed_days",
+        "Type": "REAL",
+        "Default": "",
+        "NotNull": false,
+        "PK": false
+      },
+      {
+        "Name": "prev_scheduled_days",
+        "Type": "REAL",
+        "Default": "",
+        "NotNull": false,
+        "PK": false
+      },
+      {
+        "Name": "prev_reps",
+        "Type": "INTEGER",
+        "Default": "",
+        "NotNull": false,
+        "PK": false
+      },
+      {
+        "Name": "prev_lapses",
+        "Type": "INTEGER",
+        "Default": "",
+        "NotNull": false,
+        "PK": false
+      },
+      {
+        "Name": "prev_state",
+        "Type": "INTEGER",
+        "Default": "",
+        "NotNull": false,
+        "PK": false
+      },
+      {
+        "Name": "prev_last_review",
+        "Type": "INTEGER",
+        "Default": "",
+        "NotNull": false,
+        "PK": false
+      },
+      {
+        "Name": "word_status_prior",
+        "Type": "INTEGER",
+        "Default": "",
+        "NotNull": false,
+        "PK": false
+      },
+      {
+        "Name": "created_at",
+        "Type": "INTEGER",
+        "Default": "",
+        "NotNull": false,
+        "PK": false
+      },
+      {
+        "Name": "updated_at",
+        "Type": "INTEGER",
+        "Default": "",
+        "NotNull": false,
+        "PK": false
+      }
+    ],
+    "user_prefs": [
+      {
+        "Name": "key",
+        "Type": "TEXT",
+        "Default": "",
+        "NotNull": false,
+        "PK": true
+      },
+      {
+        "Name": "value",
+        "Type": "TEXT",
+        "Default": "",
+        "NotNull": true,
+        "PK": false
+      },
+      {
+        "Name": "updated_at",
+        "Type": "INTEGER",
+        "Default": "",
+        "NotNull": true,
+        "PK": false
+      },
+      {
+        "Name": "created_at",
+        "Type": "INTEGER",
+        "Default": "",
+        "NotNull": false,
+        "PK": false
+      }
+    ],
+    "video_snapshots": [
+      {
+        "Name": "id",
+        "Type": "INTEGER",
+        "Default": "",
+        "NotNull": false,
+        "PK": true
+      },
+      {
+        "Name": "video_id",
+        "Type": "TEXT",
+        "Default": "",
+        "NotNull": true,
+        "PK": false
+      },
+      {
+        "Name": "url",
+        "Type": "TEXT",
+        "Default": "",
+        "NotNull": true,
+        "PK": false
+      },
+      {
+        "Name": "title",
+        "Type": "TEXT",
+        "Default": "",
+        "NotNull": true,
+        "PK": false
+      },
+      {
+        "Name": "platform",
+        "Type": "TEXT",
+        "Default": "",
+        "NotNull": true,
+        "PK": false
+      },
+      {
+        "Name": "lang",
+        "Type": "TEXT",
+        "Default": "'ja'",
+        "NotNull": true,
+        "PK": false
+      },
+      {
+        "Name": "cue_lemmas",
+        "Type": "TEXT",
+        "Default": "",
+        "NotNull": true,
+        "PK": false
+      },
+      {
+        "Name": "cue_count",
+        "Type": "INTEGER",
+        "Default": "",
+        "NotNull": true,
+        "PK": false
+      },
+      {
+        "Name": "updated_at",
+        "Type": "INTEGER",
+        "Default": "",
+        "NotNull": true,
+        "PK": false
+      },
+      {
+        "Name": "created_at",
+        "Type": "INTEGER",
+        "Default": "",
+        "NotNull": true,
+        "PK": false
+      }
+    ],
+    "watch_words": [
+      {
+        "Name": "lang",
+        "Type": "TEXT",
+        "Default": "'ja'",
+        "NotNull": true,
+        "PK": true
+      },
+      {
+        "Name": "lemma",
+        "Type": "TEXT",
+        "Default": "",
+        "NotNull": true,
+        "PK": true
+      },
+      {
+        "Name": "note",
+        "Type": "TEXT",
+        "Default": "''",
+        "NotNull": true,
+        "PK": false
+      },
+      {
+        "Name": "source",
+        "Type": "TEXT",
+        "Default": "'mcp'",
+        "NotNull": true,
+        "PK": false
+      },
+      {
+        "Name": "created_at",
+        "Type": "INTEGER",
+        "Default": "",
+        "NotNull": true,
+        "PK": false
+      },
+      {
+        "Name": "updated_at",
+        "Type": "INTEGER",
+        "Default": "",
+        "NotNull": false,
+        "PK": false
+      }
+    ],
+    "word_status": [
+      {
+        "Name": "lang",
+        "Type": "TEXT",
+        "Default": "'ja'",
+        "NotNull": true,
+        "PK": true
+      },
+      {
+        "Name": "lemma",
+        "Type": "TEXT",
+        "Default": "",
+        "NotNull": true,
+        "PK": true
+      },
+      {
+        "Name": "status",
+        "Type": "INTEGER",
+        "Default": "",
+        "NotNull": true,
+        "PK": false
+      },
+      {
+        "Name": "updated_at",
+        "Type": "INTEGER",
+        "Default": "",
+        "NotNull": true,
+        "PK": false
+      },
+      {
+        "Name": "created_at",
+        "Type": "INTEGER",
+        "Default": "",
+        "NotNull": false,
+        "PK": false
+      }
+    ],
+    "word_tags": [
+      {
+        "Name": "lang",
+        "Type": "TEXT",
+        "Default": "'ja'",
+        "NotNull": true,
+        "PK": true
+      },
+      {
+        "Name": "lemma",
+        "Type": "TEXT",
+        "Default": "",
+        "NotNull": true,
+        "PK": true
+      },
+      {
+        "Name": "tag",
+        "Type": "TEXT",
+        "Default": "",
+        "NotNull": true,
+        "PK": true
+      },
+      {
+        "Name": "kind",
+        "Type": "TEXT",
+        "Default": "'user'",
+        "NotNull": true,
+        "PK": false
+      },
+      {
+        "Name": "created_at",
+        "Type": "INTEGER",
+        "Default": "",
+        "NotNull": false,
+        "PK": false
+      },
+      {
+        "Name": "updated_at",
+        "Type": "INTEGER",
+        "Default": "",
+        "NotNull": false,
+        "PK": false
+      }
+    ]
+  },
+  "Indexes": {
+    "idx_card_media_card": "CREATE INDEX idx_card_media_card ON card_media(card_id)",
+    "idx_card_notes_card": "CREATE INDEX idx_card_notes_card ON card_notes(card_id, kind)",
+    "idx_cards_due": "CREATE INDEX idx_cards_due ON cards(due)",
+    "idx_cards_lang_lemma": "CREATE INDEX idx_cards_lang_lemma ON cards(lang, lemma)",
+    "idx_cards_lemma": "CREATE INDEX idx_cards_lemma ON cards(lemma)",
+    "idx_dict_entries_dict": "CREATE INDEX idx_dict_entries_dict ON dict_entries(dict_id)",
+    "idx_dict_entries_term": "CREATE INDEX idx_dict_entries_term ON dict_entries(term)",
+    "idx_frequencies_expr": "CREATE INDEX idx_frequencies_expr ON frequencies(expression)",
+    "idx_pitches_expr": "CREATE INDEX idx_pitches_expr ON pitches(expression)",
+    "idx_review_log_card": "CREATE INDEX idx_review_log_card ON review_log(card_id, id)",
+    "idx_review_log_review_id": "CREATE UNIQUE INDEX idx_review_log_review_id ON review_log(review_id) WHERE review_id IS NOT NULL",
+    "idx_review_log_time": "CREATE INDEX idx_review_log_time ON review_log(reviewed_at)",
+    "idx_word_status_status": "CREATE INDEX idx_word_status_status ON word_status(lang, status)",
+    "idx_word_tags_tag": "CREATE INDEX idx_word_tags_tag ON word_tags(lang, tag)"
+  },
+  "Triggers": {
+    "trg_card_media_stamp_insert": "CREATE TRIGGER trg_card_media_stamp_insert AFTER INSERT ON card_media FOR EACH ROW WHEN NEW.created_at IS NULL OR NEW.updated_at IS NULL BEGIN UPDATE card_media SET created_at = COALESCE(created_at, CAST(strftime('%s','now') AS INTEGER)), updated_at = COALESCE(updated_at, CAST(strftime('%s','now') AS INTEGER)) WHERE rowid = NEW.rowid; END",
+    "trg_card_media_stamp_update": "CREATE TRIGGER trg_card_media_stamp_update AFTER UPDATE ON card_media FOR EACH ROW WHEN NEW.updated_at IS OLD.updated_at BEGIN UPDATE card_media SET updated_at = CAST(strftime('%s','now') AS INTEGER) WHERE rowid = NEW.rowid; END",
+    "trg_card_notes_stamp_insert": "CREATE TRIGGER trg_card_notes_stamp_insert AFTER INSERT ON card_notes FOR EACH ROW WHEN NEW.created_at IS NULL OR NEW.updated_at IS NULL BEGIN UPDATE card_notes SET created_at = COALESCE(created_at, CAST(strftime('%s','now') AS INTEGER)), updated_at = COALESCE(updated_at, CAST(strftime('%s','now') AS INTEGER)) WHERE rowid = NEW.rowid; END",
+    "trg_card_notes_stamp_update": "CREATE TRIGGER trg_card_notes_stamp_update AFTER UPDATE ON card_notes FOR EACH ROW WHEN NEW.updated_at IS OLD.updated_at BEGIN UPDATE card_notes SET updated_at = CAST(strftime('%s','now') AS INTEGER) WHERE rowid = NEW.rowid; END",
+    "trg_cards_stamp_insert": "CREATE TRIGGER trg_cards_stamp_insert AFTER INSERT ON cards FOR EACH ROW WHEN NEW.created_at IS NULL OR NEW.updated_at IS NULL BEGIN UPDATE cards SET created_at = COALESCE(created_at, CAST(strftime('%s','now') AS INTEGER)), updated_at = COALESCE(updated_at, CAST(strftime('%s','now') AS INTEGER)) WHERE rowid = NEW.rowid; END",
+    "trg_cards_stamp_update": "CREATE TRIGGER trg_cards_stamp_update AFTER UPDATE ON cards FOR EACH ROW WHEN NEW.updated_at IS OLD.updated_at BEGIN UPDATE cards SET updated_at = CAST(strftime('%s','now') AS INTEGER) WHERE rowid = NEW.rowid; END",
+    "trg_dict_entries_stamp_insert": "CREATE TRIGGER trg_dict_entries_stamp_insert AFTER INSERT ON dict_entries FOR EACH ROW WHEN NEW.created_at IS NULL OR NEW.updated_at IS NULL BEGIN UPDATE dict_entries SET created_at = COALESCE(created_at, CAST(strftime('%s','now') AS INTEGER)), updated_at = COALESCE(updated_at, CAST(strftime('%s','now') AS INTEGER)) WHERE rowid = NEW.rowid; END",
+    "trg_dict_entries_stamp_update": "CREATE TRIGGER trg_dict_entries_stamp_update AFTER UPDATE ON dict_entries FOR EACH ROW WHEN NEW.updated_at IS OLD.updated_at BEGIN UPDATE dict_entries SET updated_at = CAST(strftime('%s','now') AS INTEGER) WHERE rowid = NEW.rowid; END",
+    "trg_dicts_stamp_insert": "CREATE TRIGGER trg_dicts_stamp_insert AFTER INSERT ON dicts FOR EACH ROW WHEN NEW.created_at IS NULL OR NEW.updated_at IS NULL BEGIN UPDATE dicts SET created_at = COALESCE(created_at, CAST(strftime('%s','now') AS INTEGER)), updated_at = COALESCE(updated_at, CAST(strftime('%s','now') AS INTEGER)) WHERE rowid = NEW.rowid; END",
+    "trg_dicts_stamp_update": "CREATE TRIGGER trg_dicts_stamp_update AFTER UPDATE ON dicts FOR EACH ROW WHEN NEW.updated_at IS OLD.updated_at BEGIN UPDATE dicts SET updated_at = CAST(strftime('%s','now') AS INTEGER) WHERE rowid = NEW.rowid; END",
+    "trg_frequencies_stamp_insert": "CREATE TRIGGER trg_frequencies_stamp_insert AFTER INSERT ON frequencies FOR EACH ROW WHEN NEW.created_at IS NULL OR NEW.updated_at IS NULL BEGIN UPDATE frequencies SET created_at = COALESCE(created_at, CAST(strftime('%s','now') AS INTEGER)), updated_at = COALESCE(updated_at, CAST(strftime('%s','now') AS INTEGER)) WHERE rowid = NEW.rowid; END",
+    "trg_frequencies_stamp_update": "CREATE TRIGGER trg_frequencies_stamp_update AFTER UPDATE ON frequencies FOR EACH ROW WHEN NEW.updated_at IS OLD.updated_at BEGIN UPDATE frequencies SET updated_at = CAST(strftime('%s','now') AS INTEGER) WHERE rowid = NEW.rowid; END",
+    "trg_kanji_notes_stamp_insert": "CREATE TRIGGER trg_kanji_notes_stamp_insert AFTER INSERT ON kanji_notes FOR EACH ROW WHEN NEW.created_at IS NULL OR NEW.updated_at IS NULL BEGIN UPDATE kanji_notes SET created_at = COALESCE(created_at, CAST(strftime('%s','now') AS INTEGER)), updated_at = COALESCE(updated_at, CAST(strftime('%s','now') AS INTEGER)) WHERE rowid = NEW.rowid; END",
+    "trg_kanji_notes_stamp_update": "CREATE TRIGGER trg_kanji_notes_stamp_update AFTER UPDATE ON kanji_notes FOR EACH ROW WHEN NEW.updated_at IS OLD.updated_at BEGIN UPDATE kanji_notes SET updated_at = CAST(strftime('%s','now') AS INTEGER) WHERE rowid = NEW.rowid; END",
+    "trg_pitches_stamp_insert": "CREATE TRIGGER trg_pitches_stamp_insert AFTER INSERT ON pitches FOR EACH ROW WHEN NEW.created_at IS NULL OR NEW.updated_at IS NULL BEGIN UPDATE pitches SET created_at = COALESCE(created_at, CAST(strftime('%s','now') AS INTEGER)), updated_at = COALESCE(updated_at, CAST(strftime('%s','now') AS INTEGER)) WHERE rowid = NEW.rowid; END",
+    "trg_pitches_stamp_update": "CREATE TRIGGER trg_pitches_stamp_update AFTER UPDATE ON pitches FOR EACH ROW WHEN NEW.updated_at IS OLD.updated_at BEGIN UPDATE pitches SET updated_at = CAST(strftime('%s','now') AS INTEGER) WHERE rowid = NEW.rowid; END",
+    "trg_review_log_stamp_insert": "CREATE TRIGGER trg_review_log_stamp_insert AFTER INSERT ON review_log FOR EACH ROW WHEN NEW.created_at IS NULL OR NEW.updated_at IS NULL BEGIN UPDATE review_log SET created_at = COALESCE(created_at, CAST(strftime('%s','now') AS INTEGER)), updated_at = COALESCE(updated_at, CAST(strftime('%s','now') AS INTEGER)) WHERE rowid = NEW.rowid; END",
+    "trg_review_log_stamp_update": "CREATE TRIGGER trg_review_log_stamp_update AFTER UPDATE ON review_log FOR EACH ROW WHEN NEW.updated_at IS OLD.updated_at BEGIN UPDATE review_log SET updated_at = CAST(strftime('%s','now') AS INTEGER) WHERE rowid = NEW.rowid; END",
+    "trg_user_prefs_stamp_insert": "CREATE TRIGGER trg_user_prefs_stamp_insert AFTER INSERT ON user_prefs FOR EACH ROW WHEN NEW.created_at IS NULL OR NEW.updated_at IS NULL BEGIN UPDATE user_prefs SET created_at = COALESCE(created_at, CAST(strftime('%s','now') AS INTEGER)), updated_at = COALESCE(updated_at, CAST(strftime('%s','now') AS INTEGER)) WHERE rowid = NEW.rowid; END",
+    "trg_user_prefs_stamp_update": "CREATE TRIGGER trg_user_prefs_stamp_update AFTER UPDATE ON user_prefs FOR EACH ROW WHEN NEW.updated_at IS OLD.updated_at BEGIN UPDATE user_prefs SET updated_at = CAST(strftime('%s','now') AS INTEGER) WHERE rowid = NEW.rowid; END",
+    "trg_video_snapshots_stamp_insert": "CREATE TRIGGER trg_video_snapshots_stamp_insert AFTER INSERT ON video_snapshots FOR EACH ROW WHEN NEW.created_at IS NULL OR NEW.updated_at IS NULL BEGIN UPDATE video_snapshots SET created_at = COALESCE(created_at, CAST(strftime('%s','now') AS INTEGER)), updated_at = COALESCE(updated_at, CAST(strftime('%s','now') AS INTEGER)) WHERE rowid = NEW.rowid; END",
+    "trg_video_snapshots_stamp_update": "CREATE TRIGGER trg_video_snapshots_stamp_update AFTER UPDATE ON video_snapshots FOR EACH ROW WHEN NEW.updated_at IS OLD.updated_at BEGIN UPDATE video_snapshots SET updated_at = CAST(strftime('%s','now') AS INTEGER) WHERE rowid = NEW.rowid; END",
+    "trg_watch_words_stamp_insert": "CREATE TRIGGER trg_watch_words_stamp_insert AFTER INSERT ON watch_words FOR EACH ROW WHEN NEW.created_at IS NULL OR NEW.updated_at IS NULL BEGIN UPDATE watch_words SET created_at = COALESCE(created_at, CAST(strftime('%s','now') AS INTEGER)), updated_at = COALESCE(updated_at, CAST(strftime('%s','now') AS INTEGER)) WHERE rowid = NEW.rowid; END",
+    "trg_watch_words_stamp_update": "CREATE TRIGGER trg_watch_words_stamp_update AFTER UPDATE ON watch_words FOR EACH ROW WHEN NEW.updated_at IS OLD.updated_at BEGIN UPDATE watch_words SET updated_at = CAST(strftime('%s','now') AS INTEGER) WHERE rowid = NEW.rowid; END",
+    "trg_word_status_stamp_insert": "CREATE TRIGGER trg_word_status_stamp_insert AFTER INSERT ON word_status FOR EACH ROW WHEN NEW.created_at IS NULL OR NEW.updated_at IS NULL BEGIN UPDATE word_status SET created_at = COALESCE(created_at, CAST(strftime('%s','now') AS INTEGER)), updated_at = COALESCE(updated_at, CAST(strftime('%s','now') AS INTEGER)) WHERE rowid = NEW.rowid; END",
+    "trg_word_status_stamp_update": "CREATE TRIGGER trg_word_status_stamp_update AFTER UPDATE ON word_status FOR EACH ROW WHEN NEW.updated_at IS OLD.updated_at BEGIN UPDATE word_status SET updated_at = CAST(strftime('%s','now') AS INTEGER) WHERE rowid = NEW.rowid; END",
+    "trg_word_tags_stamp_insert": "CREATE TRIGGER trg_word_tags_stamp_insert AFTER INSERT ON word_tags FOR EACH ROW WHEN NEW.created_at IS NULL OR NEW.updated_at IS NULL BEGIN UPDATE word_tags SET created_at = COALESCE(created_at, CAST(strftime('%s','now') AS INTEGER)), updated_at = COALESCE(updated_at, CAST(strftime('%s','now') AS INTEGER)) WHERE rowid = NEW.rowid; END",
+    "trg_word_tags_stamp_update": "CREATE TRIGGER trg_word_tags_stamp_update AFTER UPDATE ON word_tags FOR EACH ROW WHEN NEW.updated_at IS OLD.updated_at BEGIN UPDATE word_tags SET updated_at = CAST(strftime('%s','now') AS INTEGER) WHERE rowid = NEW.rowid; END"
+  },
+  "Version": 1
+}

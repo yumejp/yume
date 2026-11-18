@@ -1,0 +1,34 @@
+# Built binaries — produced by `go build`, never committed.
+yume-server
+yume-server-*
+yume-server.exe
+*.exe
+# Windows leaves a `name.exe~` of the locked old binary when rebuilding a
+# running server; never track it.
+*.exe~
+*~
+
+# Local databases + their WAL/SHM sidecars (dev/test).
+*.db
+*.db-wal
+*.db-shm
+
+# Import auto-backups.
+*.bak
+
+# Go test/coverage output.
+*.out
+*.test
+# The compiled parsebench binary, anchored to THIS directory. Unanchored
+# (`parsebench`) it also matched the cmd/parsebench/ SOURCE directory, so
+# `git add server/cmd/parsebench/<newfile>` silently did nothing — the
+# already-tracked main.go masked the trap.
+/parsebench
+
+# The phone app bundle (scripts/build-web.sh) is a build artefact.
+internal/webapp/dist/*
+!internal/webapp/dist/.gitkeep
+
+# Python bytecode from the voicevox batch.
+__pycache__/
+*.pyc

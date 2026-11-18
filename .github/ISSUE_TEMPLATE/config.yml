@@ -1,0 +1,11 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Report a security problem
+    url: https://github.com/yumejp/yume/security/policy
+    about: Report vulnerabilities privately, not in a public issue.
+  - name: User guide
+    url: https://github.com/yumejp/yume/blob/main/docs/user-guide.md
+    about: How the app works, from the first word to review.
+  - name: Server guide
+    url: https://github.com/yumejp/yume/blob/main/server/README.md
+    about: Configuration, accounts, data folder and builds.

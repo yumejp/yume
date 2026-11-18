@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024">
+<defs>
+ <linearGradient id="bg" x1="0.1" y1="0" x2="0.45" y2="1"><stop offset="0" stop-color="#4E2F48"/><stop offset="1" stop-color="#231421"/></linearGradient>
+ <radialGradient id="vig" cx="0.62" cy="0.5" r="0.55"><stop offset="0" stop-color="#E27864" stop-opacity="0.16"/><stop offset="1" stop-color="#E27864" stop-opacity="0"/></radialGradient>
+ <linearGradient id="moon" x1="0.3" y1="0.05" x2="0.75" y2="1"><stop offset="0" stop-color="#FCE6A8"/><stop offset="0.5" stop-color="#F2C35E"/><stop offset="1" stop-color="#EC9A56"/></linearGradient>
+ <filter id="blur" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="38"/></filter>
+ <mask id="cut"><rect width="1024" height="1024" fill="#fff"/><circle cx="404" cy="418" r="258" fill="#000"/></mask>
+</defs>
+
+<g transform="translate(512 512) scale(0.78) translate(-512 -512)">
+
+<circle cx="534" cy="520" r="300" fill="#FFFFFF" mask="url(#cut)"/>
+<path d="M262 664 q8 44 52 52 q-44 8 -52 52 q-8 -44 -52 -52 q44 -8 52 -52z" fill="#FFFFFF"/>
+
+</g></svg>

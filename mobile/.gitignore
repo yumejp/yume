@@ -1,0 +1,64 @@
+# Learn more https://docs.github.com/en/get-started/getting-started-with-git/ignoring-files
+
+# dependencies
+node_modules/
+
+# Expo
+.expo/
+dist/
+e2e/artifacts/
+web-build/
+expo-env.d.ts
+
+# Native
+.kotlin/
+*.orig.*
+*.jks
+*.p8
+*.p12
+*.key
+*.mobileprovision
+
+# Metro
+.metro-health-check*
+
+# debug
+npm-debug.*
+yarn-debug.*
+yarn-error.*
+
+# macOS
+.DS_Store
+*.pem
+
+# local env files
+# NOTE: `.env*.local` alone left a plain `.env` (and `.env.pi` etc.) tracked —
+# in Expo these hold EXPO_PUBLIC_* config and server addresses. Ignore the whole
+# family, keeping only the checked-in templates.
+.env
+.env.*
+!.env.*.example
+
+# --- Secrets & local data (never commit) ---------------------------------
+# (*.jks / *.p8 / *.p12 / *.key / *.pem / *.mobileprovision are covered above)
+*.pfx
+*.ppk
+id_rsa*
+id_ed25519*
+*secret*
+*credentials*
+*password*
+!**/*password*.example
+# Any local deck copy / cache pulled from the server — real vocabulary and
+# review history, not source.
+*.db
+*.sqlite
+*.sqlite3
+*.bak
+
+# typescript
+*.tsbuildinfo
+
+# generated native folders
+/ios
+/android

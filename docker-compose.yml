@@ -1,0 +1,71 @@
+# docker compose up --build
+#
+# The app and API come up at http://localhost:7654. Dictionary files download
+# into the yume-data volume on first start (about 21 MB); the deck, media
+# and settings live there too, stop the service before copying /data for a consistent backup.
+# Never run `docker compose down -v`: -v deletes that volume and your deck.
+#
+# Phone access (README "Use Yume on your phone"): keep the loopback publish,
+# set YUME_ALLOWED_HOSTS to the machine's MagicDNS name in a .env file next
+# to this one, and run `tailscale serve --bg 7654` on the host for HTTPS:
+#   YUME_ALLOWED_HOSTS=yumebox.your-tailnet.ts.net
+# Plain-HTTP fallback: set YUME_BIND to the Tailscale IP (never a public one)
+# and list every name or IP phones will type:
+#   YUME_BIND=100.101.102.103
+#   YUME_ALLOWED_HOSTS=100.101.102.103,mybox
+#
+# Version: YUME_VERSION names the release, e.g. v0.1.0-alpha. `--build` builds
+# the checked-out source and stamps it with YUME_VERSION, plus the commit when
+# YUME_COMMIT is set (`YUME_COMMIT=$(git rev-parse HEAD) docker compose up
+# --build -d`); without --build, Compose uses the published ghcr.io image of
+# that release when you have access to it.
+services:
+  yume:
+    image: ghcr.io/yumejp/yume:${YUME_VERSION:-latest}
+    build:
+      context: .
+      args:
+        VERSION: ${YUME_VERSION:-dev}
+        COMMIT: ${YUME_COMMIT:-}
+    ports:
+      - "${YUME_BIND:-127.0.0.1}:7654:7654"
+    volumes:
+      - yume-data:/data
+    environment:
+      YUME_ALLOWED_HOSTS: ${YUME_ALLOWED_HOSTS:-}
+      YUME_AUTH_MODE: ${YUME_AUTH_MODE:-open}
+      # The server binds 0.0.0.0 inside the container, and open mode refuses
+      # that without this opt-in. It is safe here because the port above is
+      # published on 127.0.0.1 unless YUME_BIND names a private address. In
+      # open mode anyone who reaches that address, including devices shared
+      # into your tailnet, acts as the owner.
+      YUME_ALLOW_OPEN_NETWORK: ${YUME_ALLOW_OPEN_NETWORK:-1}
+      # Optional dictionaries, installed on first start. "ja-ja" adds
+      # Japanese definitions (Japanese Wiktionary, CC BY-SA 4.0, about 8 MB)
+      # for the app's Settings › Definitions › Japanese.
+      YUME_DICTS: ${YUME_DICTS:-}
+    restart: unless-stopped
+    # Hardening: nothing outside /data (and a scratch /tmp) is writable, and
+    # the server runs as uid 10001 with no capabilities. The four added here
+    # are used only by the entrypoint, as root, to give /data to that user
+    # before it drops to it.
+    read_only: true
+    tmpfs:
+      - /tmp
+    cap_drop:
+      - ALL
+    cap_add:
+      - CHOWN
+      - DAC_OVERRIDE
+      - SETGID
+      - SETUID
+    security_opt:
+      - no-new-privileges:true
+
+volumes:
+  yume-data:
+    # A fixed name, so the deck no longer depends on the checkout's folder
+    # name. yume_yume-data is the volume earlier versions created for a clone
+    # in a folder named yume. If yours was cloned elsewhere, `docker volume ls`
+    # shows <folder>_yume-data: set YUME_VOLUME to that name in .env.
+    name: ${YUME_VOLUME:-yume_yume-data}

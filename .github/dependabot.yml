@@ -1,0 +1,49 @@
+version: 2
+updates:
+  - package-ecosystem: gomod
+    directory: /server
+    schedule:
+      interval: weekly
+    groups:
+      go-modules:
+        patterns: ['*']
+  # Expo pins React Native and friends per SDK; SDK upgrades are done by
+  # hand with `npx expo install --fix`, so only in-range updates come here.
+  - package-ecosystem: npm
+    directory: /mobile
+    schedule:
+      interval: weekly
+    groups:
+      npm-packages:
+        patterns: ['*']
+    ignore:
+      - dependency-name: '*'
+        update-types: ['version-update:semver-major']
+      # The SDK-pinned families: React, React Native and its libraries, Expo.
+      - dependency-name: 'react*'
+        update-types: ['version-update:semver-minor']
+      - dependency-name: '@react-native*'
+        update-types: ['version-update:semver-minor']
+      - dependency-name: '@types/react'
+        update-types: ['version-update:semver-minor']
+      - dependency-name: 'expo*'
+        update-types: ['version-update:semver-minor']
+      - dependency-name: '@expo/*'
+        update-types: ['version-update:semver-minor']
+      - dependency-name: 'jest-expo'
+        update-types: ['version-update:semver-minor']
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+    groups:
+      actions:
+        patterns: ['*']
+  # The Dockerfile's base images, pinned by digest.
+  - package-ecosystem: docker
+    directory: /
+    schedule:
+      interval: weekly
+    groups:
+      base-images:
+        patterns: ['*']

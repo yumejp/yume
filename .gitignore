@@ -1,0 +1,16 @@
+node_modules/
+.env
+.env.*
+!.env.*.example
+*.log
+.DS_Store
+
+# personal data — the deck is yours, not source
+*.db
+*.db-wal
+*.db-shm
+*.bak
+media/
+
+# runtime dictionary payloads (large, downloaded — see server/README.md)
+server/data/*.gz

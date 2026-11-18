@@ -1,0 +1,51 @@
+# Yume server as a systemd service for a Raspberry Pi (or any always-on
+# Linux box) serving your Tailscale network.
+#
+# Install (as the user that owns /home/<you>/yume):
+#   sudo cp yume-server.service /etc/systemd/system/
+#   sudo systemctl daemon-reload
+#   sudo systemctl enable --now yume-server
+#   journalctl -u yume-server -f        # watch logs
+#
+# Adjust User, paths, and the MagicDNS name below (`tailscale status` shows
+# it). Yume stays on loopback; `sudo tailscale serve --bg 7654` gives phones
+# https://<name> (see README.md next to this file).
+
+[Unit]
+Description=Yume language-learning server (tailnet)
+After=network-online.target tailscaled.service
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=pi
+WorkingDirectory=/home/pi/yume
+# -data: the folder `yume-server setup -data` filled (deck, media, dictionaries).
+# -bind: loopback behind Tailscale Serve. For the plain-HTTP fallback, the
+# Pi's Tailscale IP (100.x.y.z) instead — NEVER a public interface.
+# YUME_ALLOWED_HOSTS: the MagicDNS name phones open.
+ExecStart=/home/pi/yume/yume-server -data /home/pi/yume/data -bind 127.0.0.1 -port 7654
+Environment=YUME_ALLOWED_HOSTS=your-pi.your-tailnet.ts.net
+# Open auth mode (the default) on a non-loopback bind, such as the plain-HTTP
+# fallback above, starts only with this opt-in. It says the bind address is
+# private: everyone on the tailnet, including devices shared into it, acts as
+# the owner. Loopback behind Tailscale Serve needs none. For accounts instead,
+# set YUME_AUTH_MODE=required.
+#Environment=YUME_ALLOW_OPEN_NETWORK=1
+# On a 1 GB board, cap the heap target (about 330 MB resident instead of 450-600 MB):
+#Environment=GOMEMLIMIT=300MiB
+Restart=on-failure
+RestartSec=3
+
+# Hardening — the server only needs to read its data files and write its DB.
+NoNewPrivileges=true
+ProtectSystem=strict
+ProtectHome=read-only
+ReadWritePaths=/home/pi/yume/data
+PrivateTmp=true
+ProtectKernelTunables=true
+ProtectControlGroups=true
+RestrictSUIDSGID=true
+
+[Install]
+WantedBy=multi-user.target

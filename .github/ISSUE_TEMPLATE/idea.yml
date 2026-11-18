@@ -1,0 +1,36 @@
+name: Idea
+description: Suggest something Yume could do, or do better.
+labels: [enhancement]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: What you are trying to do
+      description: The study situation or task, in your own words. What gets in the way today?
+    validations:
+      required: true
+  - type: textarea
+    id: idea
+    attributes:
+      label: Your idea
+      description: What Yume could do about it. Sketches and screenshots of other apps are welcome.
+    validations:
+      required: true
+  - type: dropdown
+    id: area
+    attributes:
+      label: Part of Yume
+      options:
+        - The app (dictionary, library, review)
+        - The AI tutor and MCP
+        - The server, setup or backups
+        - The HTTP API
+        - Documentation
+        - Not sure
+    validations:
+      required: true
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: What you do instead today
+      description: Workarounds or other tools you use for this, if any.
