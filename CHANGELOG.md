@@ -3,7 +3,7 @@
 Notable changes per release, newest first. Releases are git tags; see
 [docs/releasing.md](docs/releasing.md) for how they are made.
 
-## Unreleased: v0.1.0-alpha
+## v0.1.0-alpha (2026-11-19)
 
 The first tagged alpha.
 

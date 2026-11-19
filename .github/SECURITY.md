@@ -2,22 +2,17 @@
 
 ## Supported versions
 
-Yume is in private alpha and has no tagged releases yet. Security fixes land
-on `main`, so run the newest `main` or the newest image built from it. Once
-releases start, fixes go to the latest release; older releases are not
-patched.
+Yume is in alpha. Security fixes go to `main` and into the next release, so
+run the latest release; older releases are not patched.
 
 ## Report a vulnerability
 
 Please do not report security problems in a public issue, pull request or
 discussion.
 
-- Use GitHub private vulnerability reporting: open the repository's
-  **Security** tab and choose **Report a vulnerability**. It is switched on
-  when the repository becomes public.
-- Until then, tell the maintainer, [@swei9322](https://github.com/swei9322),
-  privately through the channel you were invited by, not in an issue. A
-  dedicated security address will be listed here once it exists.
+Use GitHub private vulnerability reporting instead: open the repository's
+**Security** tab and choose **Report a vulnerability**. Only the maintainer,
+[@swei9322](https://github.com/swei9322), sees the report.
 
 A useful report says:
 
