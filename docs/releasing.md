@@ -135,6 +135,11 @@ public by hand in its package settings (this cannot be undone); the next
 tagged release then also gets a build provenance attestation, verifiable with
 `gh attestation verify oci://ghcr.io/yumejp/yume:<tag> -R yumejp/yume`.
 
+On the day the repository becomes public, also switch on **Private
+vulnerability reporting** under **Settings → Advanced Security**. GitHub
+does not offer it for private repositories, and the security policy and the
+code of conduct both send reports through it.
+
 ## Upgrade notes for v0.1.0-alpha
 
 Put these in the first tagged release's notes:

@@ -14,9 +14,9 @@ and publishing someone's private information are not.
 
 Report conduct problems to the maintainer,
 [@swei9322](https://github.com/swei9322), privately rather than in a public
-thread: while the project is in private alpha, through the channel you were
-invited by. A dedicated contact address will be listed here once it exists.
-Reports are kept confidential.
+thread. Open the repository's **Security** tab, choose **Report a
+vulnerability**, and say that it is a conduct report: that form reaches only
+the maintainer. Reports are kept confidential.
 
 The maintainer decides what happens next, following the Covenant's
 enforcement guidelines: from a private warning up to a ban from the project's

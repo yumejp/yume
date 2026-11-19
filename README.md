@@ -280,8 +280,10 @@ Say what you did, what you expected, and what happened, and include:
 - your install method (Docker or a native build), operating system, and
   browser or phone
 
-While the repository is private, send reports to the maintainer directly
-rather than opening a public issue.
+Open an issue with the
+[bug report form](https://github.com/yumejp/yume/issues/new/choose). Report
+security problems privately instead, as the
+[security policy](.github/SECURITY.md) describes.
 
 ## Optional additions
 
