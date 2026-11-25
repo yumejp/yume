@@ -12,7 +12,7 @@
 
 # 1. Export the app for the web. The export is the same on every
 # architecture, so it always runs on the build machine's own platform.
-FROM --platform=$BUILDPLATFORM node:22-alpine@sha256:0a7108bf6c7bf5de370ffb1a3ed6be93d405b43ff159f681a8d18c0e2bc2e402 AS web
+FROM --platform=$BUILDPLATFORM node:26-alpine@sha256:6bd9ab43c0ec0190ca7b2d193906cb8b7edf6e7f4afa43ddeccd6452710bffb5 AS web
 WORKDIR /mobile
 ENV CI=1 EXPO_NO_TELEMETRY=1
 COPY mobile/package.json mobile/package-lock.json ./
@@ -22,7 +22,7 @@ RUN npx expo export --platform web --output-dir /out
 
 # 2. Build the server with the export embedded, cross-compiled for the
 # target platform (pure Go, so no emulation).
-FROM --platform=$BUILDPLATFORM golang:1.26.11-alpine@sha256:ae52b5bc6ed045a9ed26ab03dc19327a802a9cc9aa8b27ed57f5c6b60579b0bb AS build
+FROM --platform=$BUILDPLATFORM golang:1.27.4-alpine@sha256:70bd7ddea8b6cbe5d6943cde279d6b67feb10cc924fb9100d1d8757c1575b280 AS build
 WORKDIR /src
 COPY server/go.mod server/go.sum ./
 RUN go mod download
@@ -43,7 +43,7 @@ RUN version="${VERSION#v}"; \
 # 3. Runtime: the binary, a shell for the entrypoint, and /data for everything
 # else. The server runs as uid 10001; the entrypoint starts as root only to
 # hand /data to that user (see server/docker/entrypoint.sh).
-FROM alpine:3.24@sha256:294b683cb724975bec92580e1e685676bd4b50bda910ddb8c51d4cabeaec77e6
+FROM alpine:3.24@sha256:f59abe656b692d901e184be3445e084786602108599d2a51d229c0f5a48c71bf
 LABEL org.opencontainers.image.licenses="AGPL-3.0-only"
 RUN apk add --no-cache ca-certificates su-exec \
  && addgroup -g 10001 yume && adduser -D -H -u 10001 -G yume yume \
