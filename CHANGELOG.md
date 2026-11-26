@@ -3,6 +3,15 @@
 Notable changes per release, newest first. Releases are git tags; see
 [docs/releasing.md](docs/releasing.md) for how they are made.
 
+## Unreleased
+
+### Added
+
+- Tagged releases attach standalone `yume-server` binaries with the app
+  embedded, for Windows (amd64), macOS (arm64, amd64) and Linux (amd64,
+  arm64), plus a `SHA256SUMS` file, so Yume runs without Docker or a
+  toolchain. See "Run without Docker" in the README.
+
 ## v0.1.0-alpha (2026-11-19)
 
 The first tagged alpha.

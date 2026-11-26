@@ -326,6 +326,47 @@ people join. Keep the server on a private network either way. Run
 [server guide](server/README.md#accounts-separate-decks-on-one-server) has
 the steps.
 
+## Run without Docker
+
+Releases after `v0.1.0-alpha` attach a ready-built server, with the app
+inside, for each system. From the
+[releases](https://github.com/yumejp/yume/releases), download the one file
+for yours:
+
+| System | File |
+| --- | --- |
+| Windows | `yume-server-windows-amd64.exe` |
+| macOS, Apple silicon | `yume-server-darwin-arm64` |
+| macOS, Intel | `yume-server-darwin-amd64` |
+| Linux | `yume-server-linux-amd64` |
+| Linux, ARM (Raspberry Pi 4 or 5, 64-bit) | `yume-server-linux-arm64` |
+
+The release's `SHA256SUMS` lists each file's checksum; compare it with
+`Get-FileHash <file>` in PowerShell or `shasum -a 256 <file>` elsewhere.
+Then, in a terminal in the download folder, fetch the dictionaries once and
+start the server. Windows PowerShell:
+
+```powershell
+.\yume-server-windows-amd64.exe setup
+.\yume-server-windows-amd64.exe
+```
+
+macOS and Linux (with your file's name):
+
+```sh
+chmod +x yume-server-darwin-arm64
+./yume-server-darwin-arm64 setup
+./yume-server-darwin-arm64
+```
+
+Open [http://127.0.0.1:7654](http://127.0.0.1:7654). The files are not
+code-signed, so Windows SmartScreen or macOS Gatekeeper may ask before the
+first run. Where the data lives, and what happens when `setup` is skipped, is
+the same as for a build of your own, described next; the
+[server guide](server/README.md#run) lists the other commands and settings.
+The generated-audio tool is not in the download: it needs a
+[source checkout](#generated-audio).
+
 ## Build without Docker
 
 You need [Go 1.26.11+](https://go.dev/dl/) (an older Go 1.21+ downloads

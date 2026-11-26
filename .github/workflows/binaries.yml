@@ -1,0 +1,89 @@
+name: Server binaries
+# Standalone yume-server binaries with the app embedded, for running Yume
+# without Docker. Built the way the Dockerfile builds its binary.
+#
+# - Dispatched by hand, on any branch: a dry run. The binaries and SHA256SUMS
+#   are uploaded as the `server-binaries` workflow artifact and nothing is
+#   published.
+# - Called by the Checks workflow on every run, so a change that breaks a
+#   platform fails before a tag does. On a pushed v* tag, the Checks release
+#   job attaches this artifact to the draft GitHub release.
+on:
+  workflow_dispatch:
+  workflow_call:
+    inputs:
+      version:
+        description: The release tag (v0.1.0-alpha); empty stamps sha-<commit>.
+        type: string
+        default: ''
+permissions:
+  contents: read
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      CI: '1'
+      EXPO_NO_TELEMETRY: '1'
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: mobile/package-lock.json
+      - uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7.0.0
+        with:
+          go-version-file: server/go.mod
+          cache-dependency-path: server/go.sum
+      - run: npm ci
+        working-directory: mobile
+      - name: Export the app into the server
+        working-directory: mobile
+        shell: bash
+        run: |
+          set -euo pipefail
+          dist=../server/internal/webapp/dist
+          rm -rf "$dist"
+          npx expo export --platform web --output-dir "$dist"
+          test -f "$dist/index.html"
+      - name: Cross-compile
+        working-directory: server
+        env:
+          VERSION: ${{ inputs.version }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          version=${VERSION:-sha-${GITHUB_SHA::12}}
+          version=${version#v}
+          out="$RUNNER_TEMP/binaries"
+          mkdir -p "$out"
+          for target in windows/amd64 darwin/arm64 darwin/amd64 linux/amd64 linux/arm64; do
+            goos=${target%/*}
+            goarch=${target#*/}
+            name="yume-server-$goos-$goarch"
+            [[ $goos == windows ]] && name+=.exe
+            # -buildvcs=false: the Docker build has no .git either, and the
+            # commit is stamped explicitly.
+            CGO_ENABLED=0 GOOS=$goos GOARCH=$goarch go build -trimpath -buildvcs=false \
+              -ldflags="-s -w -X main.Version=$version -X main.Commit=$GITHUB_SHA" \
+              -o "$out/$name" .
+          done
+          # The one binary this runner can execute proves the stamping.
+          got=$("$out/yume-server-linux-amd64" -version)
+          [[ $got == "$version $GITHUB_SHA" ]] || { echo "::error::linux/amd64 reports '$got'"; exit 1; }
+          # The notices a published binary must travel with (docs/releasing.md).
+          cp ../LICENSE ../LICENSES.md internal/notices/THIRD_PARTY_NOTICES.txt "$out/"
+          cd "$out"
+          sha256sum yume-server-* > SHA256SUMS
+          {
+            printf '### yume-server %s\n\n```\n' "$version"
+            cat SHA256SUMS
+            printf '```\n'
+          } >> "$GITHUB_STEP_SUMMARY"
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: server-binaries
+          path: ${{ runner.temp }}/binaries/
+          retention-days: 7
+          if-no-files-found: error

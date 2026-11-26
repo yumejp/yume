@@ -117,7 +117,19 @@ job:
 3. pushes it to `ghcr.io/yumejp/yume` as `:v0.1.0-alpha` plus the moving
    `:alpha` tag (a stable release gets `:vX.Y` and `:latest` instead);
 4. checks that both architectures report the tagged version;
-5. drafts a GitHub release.
+5. drafts a GitHub release with the standalone binaries attached:
+   `yume-server-windows-amd64.exe`, `yume-server-darwin-arm64`,
+   `yume-server-darwin-amd64`, `yume-server-linux-amd64` and
+   `yume-server-linux-arm64`, their `SHA256SUMS`, and the license notices.
+
+The binaries come from the Server binaries workflow
+(`.github/workflows/binaries.yml`), which every Checks run calls. To try the
+build without tagging, dispatch that workflow on any branch
+(`gh workflow run binaries.yml --ref <branch>`): it uploads the same files as
+the `server-binaries` workflow artifact and publishes nothing. A draft
+release's files cannot be downloaded by others until the release is
+published, and anything that pins their checksums (such as yume-hub's
+`companions.json`) takes the values from that release's `SHA256SUMS`.
 
 Finish the draft's notes and publish it: describe the alpha's limitations
 (self-hosted setup, external tutor connection, and which platforms were

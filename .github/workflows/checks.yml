@@ -112,6 +112,14 @@ jobs:
           path: ${{ runner.temp }}/yume-ci.tar.gz
           retention-days: 1
           if-no-files-found: error
+  # The standalone binaries, cross-compiled on every run so a platform that
+  # stops building fails here and not on tag day. Tag runs stamp the tag.
+  binaries:
+    permissions:
+      contents: read
+    uses: ./.github/workflows/binaries.yml
+    with:
+      version: ${{ startsWith(github.ref, 'refs/tags/v') && github.ref_name || '' }}
   # Every tested main commit, as sha-<commit>. Only main publishes: a
   # dispatched run on another branch tests but never pushes an image.
   publish:
@@ -143,10 +151,11 @@ jobs:
         if: always()
         run: docker logout ghcr.io || true
   # A pushed v* tag on a main commit: the same checks, then a linux/amd64 +
-  # linux/arm64 image tagged with the version, and a draft GitHub release for
-  # the owner to finish and publish. See docs/releasing.md.
+  # linux/arm64 image tagged with the version, and a draft GitHub release
+  # carrying the standalone binaries, for the owner to finish and publish.
+  # See docs/releasing.md.
   release:
-    needs: [server, mobile, docker]
+    needs: [server, mobile, docker, binaries]
     if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/v')
     runs-on: ubuntu-latest
     timeout-minutes: 30
@@ -222,6 +231,24 @@ jobs:
           subject-name: ${{ steps.tag.outputs.image }}
           subject-digest: ${{ steps.push.outputs.digest }}
           push-to-registry: true
+      - uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
+        with:
+          name: server-binaries
+          path: ${{ runner.temp }}/binaries
+      - name: Check the binaries against their checksums
+        working-directory: ${{ runner.temp }}/binaries
+        shell: bash
+        run: |
+          set -euo pipefail
+          for f in yume-server-windows-amd64.exe yume-server-darwin-arm64 yume-server-darwin-amd64 \
+                   yume-server-linux-amd64 yume-server-linux-arm64; do
+            grep -qF "  $f" SHA256SUMS || { echo "::error::$f is missing from SHA256SUMS"; exit 1; }
+          done
+          sha256sum --check --strict SHA256SUMS
+      - uses: actions/attest-build-provenance@4d101475d8b20a2381f78447822ac1eab6504dd8 # v4.2.2
+        if: ${{ !github.event.repository.private }}
+        with:
+          subject-checksums: ${{ runner.temp }}/binaries/SHA256SUMS
       - name: Draft the GitHub release
         env:
           GH_TOKEN: ${{ github.token }}
@@ -237,13 +264,16 @@ jobs:
             printf 'From source: `git fetch --tags && git checkout %s`, then follow the README.\n\n' "$GITHUB_REF_NAME"
             printf 'Image (linux/amd64, linux/arm64): `%s@%s`\n\n' "$IMAGE" "$DIGEST"
             printf 'Tags: `%s`\n\n' "$TAGS"
+            printf 'Without Docker: download the `yume-server-*` file for your system below, then follow "Run without Docker" in the README. SHA-256:\n\n```\n'
+            cat "$RUNNER_TEMP/binaries/SHA256SUMS"
+            printf '```\n\n'
             printf '## Tested platforms\n\nTODO before publishing: which platforms and browsers were tested.\n\n'
             printf '## Known limitations\n\nTODO before publishing: self-hosted setup, the external tutor connection, anything else learners should know.\n\n'
             printf '## Upgrading\n\nBack up first (README, "Back up and update"). TODO: schema or data changes in this release.\n\n'
           } > /tmp/notes.md
           flags=(--draft --verify-tag --generate-notes --title "Yume $GITHUB_REF_NAME" --notes-file /tmp/notes.md)
           [[ $PRERELEASE == true ]] && flags+=(--prerelease)
-          gh release create "$GITHUB_REF_NAME" "${flags[@]}"
+          gh release create "$GITHUB_REF_NAME" "${flags[@]}" "$RUNNER_TEMP"/binaries/*
           printf '### Release drafted\n\nImage: `%s@%s`\n\nFinish the notes and publish the draft release.\n' "$IMAGE" "$DIGEST" >> "$GITHUB_STEP_SUMMARY"
       - name: Log out of ghcr.io
         if: always()
